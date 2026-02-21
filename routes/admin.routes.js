@@ -5,16 +5,7 @@ const Post = require('../models/post.model');
 const Category = require('../models/category.model');
 const Comment = require('../models/comment.model');
 
-// Middleware to check if user is admin
-const isAdmin = (req, res, next) => {
-  if (req.session.user && req.session.user.role === 'admin') {
-    return next();
-  }
-  res.status(403).render('error', { 
-    title: 'Access Denied',
-    message: 'Admin access required' 
-  });
-};
+
 
 // Admin dashboard
 router.get('/', isAdmin, async (req, res) => {
