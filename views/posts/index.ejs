@@ -1,0 +1,67 @@
+<%- include('../partials/header') %>
+
+<div class="content-grid">
+    <div class="main-content">
+        <h1><%= title %></h1>
+        <% if (currentCategory) { %>
+            <p class="category-description"><%= currentCategory.description %></p>
+        <% } %>
+        
+        <% if (posts && posts.length > 0) { %>
+            <% posts.forEach(post => { %>
+                <article class="post-preview">
+                    <h2><a href="/posts/<%= post.id %>"><%= post.title %></a></h2>
+                    <div class="post-meta">
+                        By <%= post.username || 'Anonymous' %> | 
+                        <%= post.created_at ? new Date(post.created_at).toLocaleDateString() : 'Unknown date' %> |
+                        Category: <a href="/posts/category/<%= post.category_id %>"><%= post.category_name || 'Uncategorized' %></a> |
+                        Views: <%= post.views || 0 %> |
+                        Comments: <%= post.comment_count || 0 %>
+                    </div>
+                    <p><%= post.content ? post.content.substring(0, 300) + '...' : 'No content' %></p>
+                    <a href="/posts/<%= post.id %>" class="read-more">Read More</a>
+                </article>
+            <% }) %>
+        <% } else { %>
+            <p>No posts found.</p>
+        <% } %>
+    </div>
+    
+    <div class="sidebar">
+        <div class="sidebar-widget">
+            <h3>Categories</h3>
+            <% if (categories && categories.length > 0) { %>
+                <ul>
+                    <% categories.forEach(category => { %>
+                        <li>
+                            <a href="/posts/category/<%= category.id %>" 
+                               class="<%= currentCategory && currentCategory.id === category.id ? 'active' : '' %>">
+                                <%= category.name %> (<%= category.post_count || 0 %>)
+                            </a>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p>No categories yet.</p>
+            <% } %>
+        </div>
+        
+        <div class="sidebar-widget">
+            <h3>Popular Posts</h3>
+            <% if (popularPosts && popularPosts.length > 0) { %>
+                <ul>
+                    <% popularPosts.forEach(post => { %>
+                        <li>
+                            <a href="/posts/<%= post.id %>"><%= post.title %></a>
+                            <small>(<%= post.views || 0 %> views)</small>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p>No popular posts yet.</p>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

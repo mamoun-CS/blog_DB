@@ -1,0 +1,62 @@
+<%- include('../partials/header') %>
+
+<article class="post-full">
+    <h1><%= post.title %></h1>
+    
+    <div class="post-meta">
+        By <%= post.username || 'Anonymous' %> | 
+        <%= post.created_at ? new Date(post.created_at).toLocaleDateString() : 'Unknown date' %> |
+        Category: <a href="/posts/category/<%= post.category_id %>"><%= post.category_name || 'Uncategorized' %></a> |
+        Views: <%= post.views || 0 %> |
+        Comments: <%= post.comment_count || 0 %>
+    </div>
+    
+    <% if (user && (user.id === post.user_id || user.role === 'admin')) { %>
+        <div class="post-actions">
+            <a href="/posts/<%= post.id %>/edit" class="btn">Edit</a>
+            <form action="/posts/<%= post.id %>/delete" method="POST" style="display: inline;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this post?')">Delete</button>
+            </form>
+        </div>
+    <% } %>
+    
+    <div class="post-content">
+        <%= post.content %>
+    </div>
+</article>
+
+<div class="comments-section">
+    <h2>Comments (<%= comments ? comments.length : 0 %>)</h2>
+    
+    <% if (user) { %>
+        <form action="/posts/<%= post.id %>/comments" method="POST" class="comment-form">
+            <div class="form-group">
+                <label for="content">Add a comment</label>
+                <textarea id="content" name="content" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn">Post Comment</button>
+        </form>
+    <% } else { %>
+        <p><a href="/login">Login</a> to post a comment.</p>
+    <% } %>
+    
+    <% if (comments && comments.length > 0) { %>
+        <div class="comments-list">
+            <% comments.forEach(comment => { %>
+                <div class="comment">
+                    <div class="comment-meta">
+                        <strong><%= comment.username %></strong> - 
+                        <%= comment.created_at ? new Date(comment.created_at).toLocaleDateString() : 'Unknown date' %>
+                    </div>
+                    <div class="comment-content">
+                        <%= comment.content %>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } else { %>
+        <p>No comments yet. Be the first to comment!</p>
+    <% } %>
+</div>
+
+<%- include('../partials/footer') %>

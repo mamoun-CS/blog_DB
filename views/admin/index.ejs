@@ -1,0 +1,68 @@
+<%- include('../partials/header') %>
+
+<div class="admin-dashboard">
+    <h1>Admin Dashboard</h1>
+    
+    <div class="admin-stats">
+        <div class="stat-card">
+            <h3>Total Users</h3>
+            <p class="stat-number"><%= users ? users.length : 0 %></p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Posts</h3>
+            <p class="stat-number"><%= posts ? posts.length : 0 %></p>
+        </div>
+        <div class="stat-card">
+            <h3>Total Categories</h3>
+            <p class="stat-number"><%= categories ? categories.length : 0 %></p>
+        </div>
+    </div>
+    
+    <div class="admin-sections">
+        <div class="admin-section">
+            <h2>Recent Users</h2>
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (users && users.length > 0) { %>
+                        <% users.slice(0, 5).forEach(user => { %>
+                            <tr>
+                                <td><%= user.id %></td>
+                                <td><%= user.username %></td>
+                                <td><%= user.email %></td>
+                                <td><%= user.role %></td>
+                                <td><%= user.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A' %></td>
+                                <td>
+                                    <form action="/admin/users/<%= user.id %>/delete" method="POST" style="display: inline;">
+                                        <button type="submit" class="btn btn-small btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="6">No users found.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+            <a href="/admin/users" class="btn btn-small">View All Users</a>
+        </div>
+        
+        <div class="admin-section">
+            <h2>Manage Categories</h2>
+            <a href="/admin/categories" class="btn">Manage Categories</a>
+        </div>
+    </div>
+</div>
+
+<%- include('../partials/footer') %>

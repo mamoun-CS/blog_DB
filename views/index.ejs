@@ -1,0 +1,67 @@
+<%- include('partials/header') %>
+
+<div class="hero">
+    <h1><%= message %></h1>
+    <p>Share your thoughts and ideas with the world</p>
+</div>
+
+<div class="content-grid">
+    <div class="main-content">
+        <h2>Recent Posts</h2>
+        <% if (recentPosts && recentPosts.length > 0) { %>
+            <% recentPosts.slice(0, 3).forEach(post => { %>
+                <article class="post-preview">
+                    <h3><a href="/posts/<%= post.id %>"><%= post.title %></a></h3>
+                    <div class="post-meta">
+                        By <%= post.username || 'Anonymous' %> | 
+                        <%= post.created_at ? new Date(post.created_at).toLocaleDateString() : 'Unknown date' %> |
+                        Views: <%= post.views || 0 %> |
+                        Comments: <%= post.comment_count || 0 %>
+                    </div>
+                    <p><%= post.content ? post.content.substring(0, 200) + '...' : 'No content' %></p>
+                    <a href="/posts/<%= post.id %>" class="read-more">Read More</a>
+                </article>
+            <% }) %>
+            <a href="/posts" class="view-all">View All Posts</a>
+        <% } else { %>
+            <p>No posts yet. Be the first to <a href="/posts/create">create one</a>!</p>
+        <% } %>
+    </div>
+    
+    <div class="sidebar">
+        <div class="sidebar-widget">
+            <h3>Categories</h3>
+            <% if (categories && categories.length > 0) { %>
+                <ul>
+                    <% categories.forEach(category => { %>
+                        <li>
+                            <a href="/posts/category/<%= category.id %>">
+                                <%= category.name %> (<%= category.post_count || 0 %>)
+                            </a>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p>No categories yet.</p>
+            <% } %>
+        </div>
+        
+        <div class="sidebar-widget">
+            <h3>Popular Posts</h3>
+            <% if (popularPosts && popularPosts.length > 0) { %>
+                <ul>
+                    <% popularPosts.forEach(post => { %>
+                        <li>
+                            <a href="/posts/<%= post.id %>"><%= post.title %></a>
+                            <small>(<%= post.views || 0 %> views)</small>
+                        </li>
+                    <% }) %>
+                </ul>
+            <% } else { %>
+                <p>No popular posts yet.</p>
+            <% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
